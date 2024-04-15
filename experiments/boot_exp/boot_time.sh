@@ -12,10 +12,10 @@ usage() {
 #DIRECTORIES
 JAILHOUSE_PATH="/root/jailhouse"
 JAIL_SCRIPT_PATH="/root/scripts_jailhouse_kria"
-BOOT_EXP_PATH="/root/tests/omnivisor/experiments/boot_exp"
-INMATES_PATH=${BOOT_EXP_PATH}/inmates/
-BOOT_RESULTS_PATH="/root/tests/omnivisor/results/boot_results"
-UTILITY_PATH="/root/tests/omnivisor/utility"
+BOOT_EXP_PATH="/root/tests/test_omnivisor_guest/experiments/boot_exp"
+INMATES_PATH=${BOOT_EXP_PATH}/inmates
+BOOT_RESULTS_PATH="/root/tests/test_omnivisor_guest/results/boot_results"
+UTILITY_PATH="/root/tests/test_omnivisor_guest/utility"
 OUTPUT_LOG="/dev/null" #"/tmp/boot_time.log"
 # CELL NAME
 ROOT_CELL="zynqmp-kv260.cell"
