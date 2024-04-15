@@ -12,7 +12,8 @@ usage() {
 	 exit 1
 }
 
-BENCH_DIR="/root/tests/omnivisor/experiments/taclebench_exp/inmates"
+# DIRECTORIES
+source "$(dirname "$0")/../../utility/default_directories.sh"
 OUTPUT_LOG="/dev/null" #"/tmp/boot_time.log"
 
 #shm

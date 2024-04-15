@@ -14,13 +14,7 @@ usage() {
 }
 
 #DIRECTORIES
-JAIL_SCRIPT_PATH="/root/scripts_jailhouse_kria"
-TACLE_EXP_PATH="/root/tests/omnivisor/experiments/taclebench_exp"
-BENCH_DIR="/root/tests/omnivisor/experiments/taclebench_exp/inmates"
-RES_DIR="/root/tests/omnivisor/results/taclebench_results/"
-CELL_PATH="/root/jailhouse/configs/arm64"
-UTILITY_PATH="/root/tests/omnivisor/utility"
-OUTPUT_LOG="/dev/null" #"/tmp/boot_time.log"
+source "$(dirname "$0")/../../utility/default_directories.sh"
 
 KEEP=0
 
@@ -78,13 +72,13 @@ directories=$(ls -d ${BENCH_DIR}/*/ | xargs -n1 basename)
 for bench_name in $directories; do
     echo Running: ${bench_name}
     # Create the directory for the results and clean it if already exist
-    mkdir -p ${RES_DIR}/${bench_name}
+    mkdir -p ${TACLEBENCH_RES_DIR}/${bench_name}
     if [[ $KEEP -eq 0 ]]; then
-        touch ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
-        > ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+        touch ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+        > ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
         rep=0
     else
-        rep=$(wc -l ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt | awk '{print $1}')
+        rep=$(wc -l ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt | awk '{print $1}')
     fi
 
 
@@ -93,11 +87,11 @@ for bench_name in $directories; do
 
     # Check if the benchmark is in the ignore list
     if grep -q "${bench_name}" ${TACLE_EXP_PATH}/${core}_ignore.txt; then
-        touch ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
-        > ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+        touch ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+        > ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
         time=0
         for ((rep=0; rep<${REPETITIONS}; rep++)); do
-            printf "%d\n" ${time} >> ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+            printf "%d\n" ${time} >> ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
             printf "TIME: %d\n (skipped)\n" ${time}  
         done
         continue
@@ -124,7 +118,7 @@ for bench_name in $directories; do
         
         # Write results to the file
         time=$(devmem ${shm})
-        printf "%d\n" ${time} >> ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+        printf "%d\n" ${time} >> ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
         printf "TIME: %d\n" ${time} 
 
         # Clean Shared Memory

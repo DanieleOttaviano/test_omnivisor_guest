@@ -13,18 +13,8 @@ usage() {
 	 exit 1
 }
 
-#DIRECTORIES
-JAIL_SCRIPT_PATH="/root/scripts_jailhouse_kria"
-TACLE_EXP_PATH="/root/tests/omnivisor/experiments/taclebench_exp"
-BENCH_DIR="/root/tests/omnivisor/experiments/taclebench_exp/inmates"
-RES_DIR="/root/tests/omnivisor/results/taclebench_results/"
-CELL_PATH="/root/jailhouse/configs/arm64"
-UTILITY_PATH="/root/tests/omnivisor/utility"
-OUTPUT_LOG="/dev/null" #"/tmp/boot_time.log"
-
-BOARD_TESTS_PATH="/root/tests"
-BOARD_TESTS_OMNV_PATH=${BOARD_TESTS_PATH}/omnivisor
-BOARD_UTILITY_PATH=${BOARD_TESTS_OMNV_PATH}/utility
+# DIRECTORIES
+source "$(dirname "$0")/../../utility/default_directories.sh"
 
 #shm
 shm=0x46d00000
@@ -104,30 +94,30 @@ directories=$(ls -d ${BENCH_DIR}/*/ | xargs -n1 basename)
 for bench_name in $directories; do
     echo Running: ${bench_name}
     # Create the directory for the results and clean it if already exist
-    mkdir -p ${RES_DIR}/${bench_name}
-    touch ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
-    > ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+    mkdir -p ${TACLEBENCH_RES_DIR}/${bench_name}
+    touch ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+    > ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
 
     # Check if the benchmark is in the ignore list
     if grep -q "${bench_name}" ${TACLE_EXP_PATH}/${core}_ignore.txt; then
         time=0
         for ((rep=0; rep<${REPETITIONS}; rep++)); do
-            printf "%d\n" ${time} >> ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+            printf "%d\n" ${time} >> ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
             printf "TIME: %d\n (skipped)\n" ${time}  
         done
         continue
     fi
 
     # Write some headers
-    echo "# ${REPETITIONS} repetitions for ${bench_name}" >> ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
-    echo "# Target slowdown: ${TARGET_SLOWDOWN}" >> ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
-    echo "# Starting bandwidth: APU=${APU_BANDWIDTH}, FPGA=${FPGA_BANDWIDTH}, RPU=${RPU_BANDWIDTH}" >> ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
-    echo "iteration,apu_bandwidth,fpga_bandwidth,rpu_bandwidth,time,in_target" >> ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+    echo "# ${REPETITIONS} repetitions for ${bench_name}" >> ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+    echo "# Target slowdown: ${TARGET_SLOWDOWN}" >> ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+    echo "# Starting bandwidth: APU=${APU_BANDWIDTH}, FPGA=${FPGA_BANDWIDTH}, RPU=${RPU_BANDWIDTH}" >> ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+    echo "iteration,apu_bandwidth,fpga_bandwidth,rpu_bandwidth,time,in_target" >> ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
 
     for ((rep=0; rep<=${REPETITIONS}; rep++)); do
         #Apply temporal regulation
         echo "Applying temporal regulation -R ${RPU_BANDWIDTH} -F ${FPGA_BANDWIDTH} -A ${APU_BANDWIDTH}"
-        bash ${BOARD_UTILITY_PATH}/apply_temp_reg.sh -R ${RPU_BANDWIDTH} -F ${FPGA_BANDWIDTH} -A ${APU_BANDWIDTH} -r -f -a
+        bash ${UTILITY_PATH}/apply_temp_reg.sh -R ${RPU_BANDWIDTH} -F ${FPGA_BANDWIDTH} -A ${APU_BANDWIDTH} -r -f -a
         echo "Applied"
 
         # Start Test
@@ -171,8 +161,8 @@ for bench_name in $directories; do
         echo "BELOW_TARGET_SLOWDOWN: ${in_target}" 
 
         # Write results to the file
-        # printf "%d\n" ${time} >> ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
-        printf "%d,%.f,%.f,%.f,%d,%d\n" ${rep} ${APU_BANDWIDTH} ${FPGA_BANDWIDTH} ${RPU_BANDWIDTH} ${time} ${in_target} >> ${RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+        # printf "%d\n" ${time} >> ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
+        printf "%d,%.f,%.f,%.f,%d,%d\n" ${rep} ${APU_BANDWIDTH} ${FPGA_BANDWIDTH} ${RPU_BANDWIDTH} ${time} ${in_target} >> ${TACLEBENCH_RES_DIR}/${bench_name}/${bench_name}${NAME_EXTENSION}.txt
         printf "TIME: %d; " ${time} 
 
         if [[ $in_target -eq 0 ]]; then

@@ -8,9 +8,9 @@ usage() {
 	 exit 1
 }
 
-UTILITY_PATH="/root/tests/omnivisor/utility"
-BOOT_RESULTS_PATH="/root/tests/omnivisor/results/boot_results"
-REMOTEPROC0_PATH="/sys/class/remoteproc/remoteproc0"
+# Directories
+source "$(dirname "$0")/../../utility/default_directories.sh"
+
 
 # Image sizes in Megabytes
 image_sizes=(1 10 20 30 40 50 60 70 80 90)

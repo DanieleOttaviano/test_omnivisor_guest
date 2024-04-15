@@ -10,13 +10,8 @@ usage() {
 }
 
 #DIRECTORIES
-JAILHOUSE_PATH="/root/jailhouse"
-JAIL_SCRIPT_PATH="/root/scripts_jailhouse_kria"
-BOOT_EXP_PATH="/root/tests/test_omnivisor_guest/experiments/boot_exp"
-INMATES_PATH=${BOOT_EXP_PATH}/inmates
-BOOT_RESULTS_PATH="/root/tests/test_omnivisor_guest/results/boot_results"
-UTILITY_PATH="/root/tests/test_omnivisor_guest/utility"
-OUTPUT_LOG="/dev/null" #"/tmp/boot_time.log"
+source "$(dirname "$0")/../../utility/default_directories.sh"
+
 # CELL NAME
 ROOT_CELL="zynqmp-kv260.cell"
 
@@ -87,9 +82,9 @@ for size in "${image_sizes[@]}"; do
 	for ((rep=0; rep<${repetitions}; rep++)); do
 
 		# Retrieve image from the SD card
-		cat ${INMATES_PATH}/${core}/${core}-demo-${size}Mb.bin > /dev/null
+		cat ${BOOT_INMATES_PATH}/${core}/${core}-demo-${size}Mb.bin > /dev/null
 		if [[ $core == "RPU" ]]; then
-			cat ${INMATES_PATH}/${core}/${core}-demo_tcm.bin > /dev/null
+			cat ${BOOT_INMATES_PATH}/${core}/${core}-demo_tcm.bin > /dev/null
 		fi
 		wait
 
@@ -98,14 +93,14 @@ for size in "${image_sizes[@]}"; do
 		hex_init_time=$(devmem 0xFF250000)
 		
 		# Create Cell
-		jailhouse cell create ${INMATES_PATH}/${core}/zynqmp-kv260-${core}-inmate-demo.cell >> ${OUTPUT_LOG} 2>&1	
+		jailhouse cell create ${BOOT_INMATES_PATH}/${core}/zynqmp-kv260-${core}-inmate-demo.cell >> ${OUTPUT_LOG} 2>&1	
 		hex_create_time=$(devmem 0xFF250000)
 		
 		# Load Cell
 		if [[ $core == "RPU" ]]; then
-			jailhouse cell load inmate-demo-${core} ${INMATES_PATH}/${core}/${core}-demo_tcm.bin -a 0xffe00000 ${INMATES_PATH}/${core}/${core}-demo-${size}Mb.bin >> ${OUTPUT_LOG} 2>&1
+			jailhouse cell load inmate-demo-${core} ${BOOT_INMATES_PATH}/${core}/${core}-demo_tcm.bin -a 0xffe00000 ${BOOT_INMATES_PATH}/${core}/${core}-demo-${size}Mb.bin >> ${OUTPUT_LOG} 2>&1
 		else
-			jailhouse cell load inmate-demo-${core} ${INMATES_PATH}/${core}/${core}-demo-${size}Mb.bin >> ${OUTPUT_LOG} 2>&1
+			jailhouse cell load inmate-demo-${core} ${BOOT_INMATES_PATH}/${core}/${core}-demo-${size}Mb.bin >> ${OUTPUT_LOG} 2>&1
 		fi
 		
 		hex_load_time=$(devmem 0xFF250000)

@@ -13,10 +13,7 @@ usage() {
 }
 
 #DIRECTORIES
-ISOLATION_EXP_PATH="/root/tests/omnivisor/experiments/isolation_exp"
-INMATES_PATH=${ISOLATION_EXP_PATH}/inmates/
-UTILITY_PATH="/root/tests/omnivisor/utility"
-OUTPUT_LOG="/dev/null" #"/tmp/boot_time.log"
+source "$(dirname "$0")/../../utility/default_directories.sh"
 
 TEST_DURATION=20 # seconds
 
@@ -51,11 +48,11 @@ echo "1" > /proc/sys/kernel/printk
 
 ## START TEST
 # Start core under isolation test
-jailhouse cell create ${INMATES_PATH}/${core}/zynqmp-kv260-${core}-inmate-demo.cell >> ${OUTPUT_LOG} 2>&1
+jailhouse cell create ${ISOLATION_INMATES_PATH}/${core}/zynqmp-kv260-${core}-inmate-demo.cell >> ${OUTPUT_LOG} 2>&1
 if [[ "${core}" == "RPU" ]]; then
-    jailhouse cell load inmate-demo-${core} ${INMATES_PATH}/${core}/${core}-isolation-demo_tcm.bin -a 0xffe00000 ${INMATES_PATH}/${core}/${core}-isolation-demo.bin >> ${OUTPUT_LOG} 2>&1
+    jailhouse cell load inmate-demo-${core} ${ISOLATION_INMATES_PATH}/${core}/${core}-isolation-demo_tcm.bin -a 0xffe00000 ${ISOLATION_INMATES_PATH}/${core}/${core}-isolation-demo.bin >> ${OUTPUT_LOG} 2>&1
 elif [[ "${core}" == "RISCV" ]]; then
-    jailhouse cell load inmate-demo-${core} ${INMATES_PATH}/${core}/${core}-isolation-demo.bin >> ${OUTPUT_LOG} 2>&1
+    jailhouse cell load inmate-demo-${core} ${ISOLATION_INMATES_PATH}/${core}/${core}-isolation-demo.bin >> ${OUTPUT_LOG} 2>&1
 fi
 jailhouse cell start inmate-demo-${core} >> ${OUTPUT_LOG} 2>&1
 
