@@ -15,6 +15,7 @@ usage() {
 #DIRECTORIES
 source "$(dirname "$0")/../../utility/default_directories.sh"
 
+OUTPUT_LOG="/dev/null" #"/tmp/boot_time.log"
 TEST_DURATION=20 # seconds
 
 while getopts "c:n:h" o; do

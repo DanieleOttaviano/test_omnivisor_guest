@@ -4,9 +4,13 @@
 # echo $$ >> /sys/fs/cgroup/cpuset/test/cgroup.procs
 
 # pwd
-CURRENT_DIR=$(dirname -- "$(readlink -f -- "$0")")
-# echo $CURRENT_DIR
-source ${CURRENT_DIR}/board_info.sh 
+source "$(dirname "$0")/../../utility/default_directories.sh"
+
+# REGISTERS
+TRAFFIC_GENERATOR_1=0x80010000
+TRAFFIC_GENERATOR_2=0x80020000
+TRAFFIC_GENERATOR_3=0x80030000
+SHARED_MEM_ADDR=0x46d00000
 
 TEST_DURATION=20 # seconds
 SOLO_TIME=2 # seconds
@@ -70,9 +74,9 @@ if [[ $disturb == "APU" || $disturb == "ALL" ]]; then
         :
     else
         # Start APU membomb
-        ${BOARD_ISOLATION_EXP_PATH}/bandwidth -l1 -c1 -p 0 -d 0 -b "-a write -m 4096 -i12" &
-        ${BOARD_ISOLATION_EXP_PATH}/bandwidth -l1 -c2 -p 0 -d 0 -b "-a write -m 4096 -i12" &
-        ${BOARD_ISOLATION_EXP_PATH}/bandwidth -l1 -c3 -p 0 -d 0 -b "-a write -m 4096 -i12" &
+        ${ISOLATION_INMATES_PATH}/APU/bandwidth -l1 -c1 -p 0 -d 0 -b "-a write -m 4096 -i12" &
+        ${ISOLATION_INMATES_PATH}/APU/bandwidth -l1 -c2 -p 0 -d 0 -b "-a write -m 4096 -i12" &
+        ${ISOLATION_INMATES_PATH}/APU/bandwidth -l1 -c3 -p 0 -d 0 -b "-a write -m 4096 -i12" &
     fi
 
     if [[ $disturb == "ALL" ]]; then

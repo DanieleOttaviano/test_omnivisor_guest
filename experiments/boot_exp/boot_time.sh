@@ -12,6 +12,8 @@ usage() {
 #DIRECTORIES
 source "$(dirname "$0")/../../utility/default_directories.sh"
 
+OUTPUT_LOG="/dev/null" #"/tmp/boot_time.log"
+
 # CELL NAME
 ROOT_CELL="zynqmp-kv260.cell"
 
@@ -61,7 +63,7 @@ echo "1" > /proc/sys/kernel/printk
 echo "" > ${OUTPUT_LOG}
 
 # Start the Hypervisor (Remove if already there)
-${UTILITY_PATH}/jailhouse_start.sh >> ${OUTPUT_LOG} 2>&1
+${UTILITY_DIR}/jailhouse_start.sh >> ${OUTPUT_LOG} 2>&1
 
 # Clean Shared Memory
 devmem ${SHARED_MEM_ADDR} 32 0x00000000

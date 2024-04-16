@@ -6,7 +6,7 @@
 # BOARD_ISOLATION_INMATES_PATH=${BOARD_ISOLATION_EXP_PATH}/inmates
 # BOARD_BOOT_EXP_PATH=${BOARD_TESTS_OMNV_PATH}/experiments/boot_exp
 # BOARD_TACLEBENCH_PATH=${BOARD_TESTS_OMNV_PATH}/experiments/taclebench_exp
-# BOARD_UTILITY_PATH=${BOARD_TESTS_OMNV_PATH}/utility
+# BOARD_UTILITY_DIR=${BOARD_TESTS_OMNV_PATH}/utility
 
 # # Create group on core0 to execute the tests
 # echo "Create group on core0 to execute the tests"
@@ -16,11 +16,11 @@
 
 # # Start Omnivisor
 # echo "Starting Omnivisor"
-# bash ${BOARD_UTILITY_PATH}/jailhouse_start.sh
+# bash ${BOARD_UTILITY_DIR}/jailhouse_start.sh
 
 # # Apply Temporal Isolation
 # echo "Starting bandwidth regulation"
-# bash ${BOARD_UTILITY_PATH}/apply_temp_reg.sh -R ${RPU_BANDWIDTH} -F ${FPGA_BANDWIDTH} -A ${APU_BANDWIDTH} -r -f -a
+# bash ${BOARD_UTILITY_DIR}/apply_temp_reg.sh -R ${RPU_BANDWIDTH} -F ${FPGA_BANDWIDTH} -A ${APU_BANDWIDTH} -r -f -a
 
 #         # Apply DISTURB
 #         # Preload in memory the RPU1 membomb

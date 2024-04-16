@@ -2,7 +2,7 @@
 
 shm=0x46d00000
 
-RESULTS_DIR="/root/tests/omnivisor/results"
+RESULTS_DIR="/root/tests/test_omnivisor_guest/results"
 
 
 mkdir -p ${RESULTS_DIR}/isolation_results

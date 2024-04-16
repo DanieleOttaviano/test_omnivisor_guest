@@ -7,7 +7,7 @@ tg3=0x80020000
 
 # DIRECTORIES
 RPROC_SCRIPT_PATH="/root/scripts_remoteproc"
-ISOL_EXP_PATH="/root/tests/omnivisor/isolation_exp"
+ISOL_EXP_PATH="/root/tests/test_omnivisor_guest/isolation_exp"
 
 usage() {
   echo -e "Usage: $0 \r\n \

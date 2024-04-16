@@ -117,7 +117,7 @@ for bench_name in $directories; do
     for ((rep=0; rep<=${REPETITIONS}; rep++)); do
         #Apply temporal regulation
         echo "Applying temporal regulation -R ${RPU_BANDWIDTH} -F ${FPGA_BANDWIDTH} -A ${APU_BANDWIDTH}"
-        bash ${UTILITY_PATH}/apply_temp_reg.sh -R ${RPU_BANDWIDTH} -F ${FPGA_BANDWIDTH} -A ${APU_BANDWIDTH} -r -f -a
+        bash ${UTILITY_DIR}/apply_temp_reg.sh -R ${RPU_BANDWIDTH} -F ${FPGA_BANDWIDTH} -A ${APU_BANDWIDTH} -r -f -a
         echo "Applied"
 
         # Start Test
