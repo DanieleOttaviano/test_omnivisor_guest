@@ -118,3 +118,22 @@ if [[ $disturb == "FPGA" || $disturb == "ALL" ]]; then
         sleep ${FULL_INTERFERENCE_TIME}
     fi
 fi
+
+## STOP TEST
+if [[ $disturb == "APU" || $disturb == "ALL" ]]; then
+    # Stop APU membomb
+    echo "Stopping APU membomb"
+    killall bandwidth
+fi
+if [[ $disturb == "RPU1" || $disturb == "ALL" ]]; then
+    # Stop RPU1 membomb
+    echo "Stopping RPU1 membomb"
+    echo stop > /sys/class/remoteproc/remoteproc1/state
+fi
+if [[ $disturb == "FPGA" || $disturb == "ALL" ]]; then
+    # Stop traffic generators
+    echo "Stopping FPGA Traffic Generators"
+    devmem ${TRAFFIC_GENERATOR_1} 64 0
+    devmem ${TRAFFIC_GENERATOR_2} 64 0
+    devmem ${TRAFFIC_GENERATOR_3} 64 0
+fi
