@@ -3,6 +3,7 @@
 
 # pwd
 source "$(dirname "$0")/../utility/default_directories.sh"
+DEMO_INMATES_PATH="$(dirname "$0")/inmates"
 
 # REGISTERS
 TRAFFIC_GENERATOR_1=0x80010000
@@ -51,9 +52,12 @@ if [[ $action == "Enable" ]]; then
         ${ISOLATION_INMATES_PATH}/APU/bandwidth -l1 -c3 -p 0 -d 0 -b "-a write -m 4096 -i12" &
     fi
     if [[ $disturb == "RPU1" ]]; then
+        if [[ ! -f '/lib/firmware/RPU1-membomb-demo.elf' ]]; then
+            cp ${DEMO_INMATES_PATH}/RPU/RPU1-membomb-demo.elf /lib/firmware/RPU1-membomb-demo.elf
+        fi
         # Start RPU1 membomb
         echo "Starting RPU1 membomb"
-        cd /lib/firmware
+        # cd /lib/firmware
         echo RPU1-membomb-demo.elf > /sys/class/remoteproc/remoteproc1/firmware
         echo start > /sys/class/remoteproc/remoteproc1/state
     fi
